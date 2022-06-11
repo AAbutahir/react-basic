@@ -3,6 +3,7 @@ import './App.css';
 import Header from './Header';
 import BlogList from './BlogList';
 import AddBlog from './AddBlog';
+import { useState } from 'react';
 
 
 function App() {
@@ -79,13 +80,47 @@ function App() {
               "date": "9/25/2015"
               }
       }
-
   ]
+
+  const [blog, setBlog] = useState(blogLists)
+
+  function onAddBlog(event) {
+        event.preventDefault();
+        let blogTitle = document.getElementById('title').value;
+        let blogDescription = document.getElementById('description').value;
+        let blogImageUrl = document.getElementById('imageUrl').value;
+        let blogAuthorName = document.getElementById('authorName').value;
+        if(blogTitle === "") {
+            document.getElementById('title').classList.add("error")
+            return;
+        }
+        const blogData = {
+            "id": Math.random(),
+            "imgurl": blogImageUrl,
+            "title": blogTitle,
+            "description": blogDescription,
+            "author": {
+                "authorid": 2,
+                "imgUrl": "",
+                "name": blogAuthorName,
+                "date": '2022/12/12'
+            }
+        }
+        console.log(blogData)
+
+        setBlog((previousBlog) => {
+            // let b = previousBlog.filter(e => e.id === blogData.id);
+            // b.forEach(f => previousBlog.splice(previousBlog.findIndex(e => e.id === f.id),1));
+            return [...previousBlog, blogData]
+        });
+        
+    }
+  
   return (
     <div className="App">
       <Header></Header>
-      <AddBlog></AddBlog>
-      <BlogList blogData={blogLists}></BlogList>
+      <AddBlog onFormSubmitHandler={onAddBlog}></AddBlog>
+      <BlogList  blogData={blog}></BlogList>
     </div>
   );
 }
